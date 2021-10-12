@@ -20,3 +20,12 @@ def get_single_location(id):
             requested_location = location
 
     return requested_location
+
+def create_location(location):
+
+    max_id = LOCATIONS[-1]["id"] # finds id of last index
+    new_id = max_id + 1 # creates new id
+    location["id"] = new_id #adds new id to location dictionary
+    LOCATIONS.append(location) 
+
+    return location
