@@ -2,17 +2,20 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from animals import get_all_animals, get_single_animal
 from locations import get_all_locations, get_single_location
 from employees import get_all_employees, get_single_employee
-
+from customers import get_all_customers, get_single_customer
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
 # work together for a common purpose. In this case, that
 # common purpose is to respond to HTTP requests from a client.
+
+
 class HandleRequests(BaseHTTPRequestHandler):
     # This is a Docstring it should be at the beginning of all classes and functions
     # It gives a description of the class or function
     """Controls the functionality of any GET, PUT, POST, DELETE requests to the server
     """
+
     def parse_url(self, path):
         # Just like splitting a string in JavaScript. If the
         # path is "/animals/1", the resulting list will
@@ -74,23 +77,26 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "animals":
             if id is not None:
                 response = f"{get_single_animal(id)}"
-
             else:
                 response = f"{get_all_animals()}"
 
         if resource == "locations":
             if id is not None:
                 response = f"{get_single_location(id)}"
-
             else:
                 response = f"{get_all_locations()}"
 
         if resource == "employees":
             if id is not None:
                 response = f"{get_single_employee(id)}"
-            
             else:
                 response = f"{get_all_employees()}"
+
+        if resource == "customers":
+            if id is not None:
+                response = f"{get_single_customer(id)}"
+            else:
+                response = f"{get_all_customers()}"
 
         self.wfile.write(response.encode())
 
