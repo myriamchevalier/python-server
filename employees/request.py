@@ -3,22 +3,26 @@ EMPLOYEES = [
     {
         "id": 1,
         "name": "Ben Gregory",
-        "email": "ben@gregory.com"
+        "address": "100 Oak St.",
+        "locationId": 1
     },
     {
         "id": 2,
         "name": "Cassie Tesauro",
-        "email": "cassie@tesauro.com"
+        "address": "78 Golden Ave",
+        "locationId": 1
     },
     {
         "id": 3,
         "name": "Erin Truman",
-        "email": "erin@truman.com"
+        "address": "305 Artist Way",
+        "locationId": 2
     },
     {
         "id": 4,
         "name": "Matthew Singler",
-        "email": "matthew@singler.com"
+        "address": "794 Music Sq.",
+        "locationId": 2
     }
 ]
 
