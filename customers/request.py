@@ -3,22 +3,26 @@ CUSTOMERS = [
     {
         "id": 1,
         "name": "Scott Silver",
-        "email": "scott@silver.com"
+        "email": "scott@silver.com",
+        "password": "scott"
     },
     {
         "id": 2,
         "name": "Steve Brownlee",
-        "email": "steve@coach.com"
+        "email": "steve@coach.com",
+        "password": "steve"
     },
     {
         "id": 3,
         "name": "Hannah Hall",
-        "email": "hannah@hall.com"
+        "email": "hannah@hall.com",
+        "password": "hannah"
     },
     {
         "id": 4,
         "name": "Kylie Anyce",
-        "email": "kylie@anyce.com"
+        "email": "kylie@anyce.com",
+        "password": "kylie"
     }
 ]
 
