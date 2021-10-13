@@ -47,3 +47,14 @@ def create_customer(customer):
     CUSTOMERS.append(customer)
 
     return customer
+
+def delete_customer(id):
+    customer_index = -1 # Set this as -1 so we don't accidentally pop() the last index
+
+    for index, customer in enumerate(CUSTOMERS):
+        if customer["id"] == id:
+            customer_index = index
+    
+    if customer_index >= 0:  # Condition that ensures we don't pop something if no index is found
+        CUSTOMERS.pop(customer_index)
+
