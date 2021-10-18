@@ -1,3 +1,6 @@
+import json
+import sqlite3
+from models import Customer
 
 CUSTOMERS = [
     {
@@ -27,17 +30,45 @@ CUSTOMERS = [
 ]
 
 def get_all_customers():
-    return CUSTOMERS
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT 
+            c.id,
+            c.name,
+            c.email,
+            c.password
+        FROM customer c
+        """)
+
+        customers = []
+        
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            customer = Customer(row['id'], row['name'], row['email'], row['password'])
+            customers.append(customer.__dict__)
+
+    return json.dumps(customers)
 
 def get_single_customer(id):
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    requested_customer = None
+        db_cursor.execute("""
+        SELECT *
+        FROM customer
+        WHERE id = ?
+        """, (id, ))
 
-    for customer in CUSTOMERS:
-        if customer["id"] == id:
-            requested_customer = customer
-    
-    return requested_customer
+        data = db_cursor.fetchone()
+
+        customer = Customer(data['id'], data['name'], data['email'], data['password'])
+        return json.dumps(customer.__dict__)
+  
 
 def create_customer(customer):
 
