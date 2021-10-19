@@ -163,3 +163,29 @@ def get_animals_by_location(location_id):
 
     return json.dumps(animals)
             
+def get_animals_by_status(status):
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Note use of LOWER() on status to ensure something gets returned even if user
+        # enters all lowercase letters.
+        # use of the .lower() method ensures that the response will always match the input,
+        # no matter how the user inputs the query.
+        db_cursor.execute("""
+        SELECT *
+        FROM animal
+        WHERE LOWER(status) = ?
+        """, ( status.lower(), ))   
+
+
+        animals = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            animal = Animal(row['id'], row['name'], row['breed'],
+                            row['status'], row['location_id'],
+                            row['customer_id'])
+            animals.append(animal.__dict__)
+
+    return json.dumps(animals)
