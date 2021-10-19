@@ -1,3 +1,4 @@
+
 import json
 import sqlite3
 from models import Customer
@@ -94,3 +95,29 @@ def update_customer(id, new_customer):
         if customer["id"] == id:
             CUSTOMERS[index] = new_customer
             break
+
+def get_customers_by_email(email):
+
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            c.id,
+            c.name,
+            c.email,
+            c.password
+        FROM customer c
+        WHERE c.email = ?
+        """, ( email, ))
+
+        customers = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            customer = Customer(row['id'], row['name'], row['email'],
+            row['password'])
+            customers.append(customer.__dict__)
+
+    return json.dumps(customers)
