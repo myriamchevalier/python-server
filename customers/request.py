@@ -109,7 +109,7 @@ def get_customers_by_email(email):
             c.email,
             c.password
         FROM customer c
-        WHERE c.email = ?
+        WHERE email = ?
         """, ( email, ))
 
         customers = []
