@@ -3,33 +3,6 @@ import json
 import sqlite3
 from models import Customer
 
-CUSTOMERS = [
-    {
-        "id": 1,
-        "name": "Scott Silver",
-        "email": "scott@silver.com",
-        "password": "scott"
-    },
-    {
-        "id": 2,
-        "name": "Steve Brownlee",
-        "email": "steve@coach.com",
-        "password": "steve"
-    },
-    {
-        "id": 3,
-        "name": "Hannah Hall",
-        "email": "hannah@hall.com",
-        "password": "hannah"
-    },
-    {
-        "id": 4,
-        "name": "Kylie Anyce",
-        "email": "kylie@anyce.com",
-        "password": "kylie"
-    }
-]
-
 def get_all_customers():
     with sqlite3.connect("./kennel.db") as conn:
         conn.row_factory = sqlite3.Row
