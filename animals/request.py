@@ -1,8 +1,6 @@
 import json
 import sqlite3
-from models import Animal
-from models import Location
-from models.customer import Customer
+from models import Animal, Location, Customer
 
 def get_all_animals():
     # Open a connection to the database
@@ -25,11 +23,11 @@ def get_all_animals():
             l.address location_address,
             c.name customer_name,
             c.email customer_email
-        FROM animal a
-        JOIN location l
+        FROM Animal a
+        JOIN Location l
             ON l.id = a.location_id
-        JOIN customer c 
-            ON c.id = a.customer_id
+        JOIN Customer c 
+            ON c.id = a.customer_id;
         """)
 
         # Initialize an empty list to hold all animal representations
@@ -50,10 +48,10 @@ def get_all_animals():
                             row['customer_id'])
 
             location = Location(
-                row['id'], row['location_name'], row['location_address'])
+                row['location_id'], row['location_name'], row['location_address'])
 
             customer = Customer(
-                row['id'], row['customer_name'], row['customer_email'])
+                row['customer_id'], row['customer_name'], row['customer_email'])
 
             animal.location = location.__dict__
             animal.customer = customer.__dict__
@@ -101,13 +99,12 @@ def create_animal(new_animal):
 
         db_cursor.execute("""
         INSERT INTO animal
-            ( name, breed, status, location_id, customer_id)
+            ( name, breed, status, location_id, customer_id )
         VALUES
-            ( ?, ?, ?, ?, ?)
+            ( ?, ?, ?, ?, ?);
         """, (new_animal['name'], new_animal['breed'],
               new_animal['status'], new_animal['location_id'],
-              new_animal['customer_id'],))
-
+              new_animal['customer_id'],)) 
         # The `lastrowid` property on the cursor will return
         # the primary key of the last thing that got added to
         # the database.
@@ -143,7 +140,7 @@ def update_animal(id, new_animal):
                 status = ?,
                 location_id = ?,
                 customer_id = ?
-        WHERE id = ?
+        WHERE id = ? ;
         """, (new_animal['name'], new_animal['breed'],
               new_animal['status'], new_animal['location_id'],
               new_animal['customer_id'], id, ))

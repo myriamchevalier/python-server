@@ -30,7 +30,7 @@ def get_all_employees() :
         for row in dataset:
             employee = Employee(row['id'], row['name'], row['address'], row['location_id'])
 
-            location = Location(row['id'], row['location_name'], row['location_address'])
+            location = Location(row['location_id'], row['location_name'], row['location_address'])
             employee.location = location.__dict__
             employees.append(employee.__dict__)
     
@@ -53,13 +53,22 @@ def get_single_employee(id):
 
         return json.dumps(employee.__dict__)
 
-def create_employee(employee):
-    max_id = EMPLOYEES[-1]["id"]
-    new_id = max_id + 1
-    employee["id"] = new_id
-    EMPLOYEES.append(employee)
+def create_employee(new_employee):
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
 
-    return employee
+        db_cursor.execute("""
+        INSERT INTO employee
+            ( name, address, location_id )
+        VALUES ( ?, ?, ? ) ;
+        """, (new_employee['name'], new_employee['address'], new_employee['location_id']) )
+
+        id = db_cursor.lastrowid
+
+        new_employee['id'] = id
+
+    return json.dumps(new_employee)
+    
 
 def delete_employee(id):
     with sqlite3.connect("./kennel.db") as conn:
@@ -71,11 +80,25 @@ def delete_employee(id):
         """, (id, ))
 
 def update_employee(id, new_employee):
-    for index, employee in enumerate(EMPLOYEES):
-        if employee["id"] == id:
-            EMPLOYEES[index] = new_employee
-            break
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
 
+        db_cursor.execute("""
+        UPDATE employee
+            SET 
+                name = ?,
+                address = ?,
+                location_id = ?
+        WHERE id = ?;
+        """, (new_employee['name'], new_employee['address'], new_employee['location_id'], id, ))
+
+        rows_affected = db_cursor.rowcount
+
+        if rows_affected == 0:
+            return False
+        else:
+            return True
+            
 def get_employees_by_location(location_id):
     with sqlite3.connect("./kennel.db") as conn:
         conn.row_factory = sqlite3.Row

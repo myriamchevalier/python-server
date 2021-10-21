@@ -44,14 +44,21 @@ def get_single_customer(id):
         return json.dumps(customer.__dict__)
   
 
-def create_customer(customer):
+def create_customer(new_customer):
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
+        
+        db_cursor.execute("""
+        INSERT INTO customer
+            ( name, email, password )
+        VALUES ( ?, ?, ? );
+        """, (new_customer['name'], new_customer['email'], new_customer['password']))
 
-    max_id = CUSTOMERS[-1]["id"]
-    new_id = max_id + 1
-    customer["id"] = new_id
-    CUSTOMERS.append(customer)
+        id = db_cursor.lastrowid
 
-    return customer
+        new_customer['id'] = id
+
+    return json.dumps(new_customer)
 
 def delete_customer(id):
     with sqlite3.connect("./kennel.db") as conn:
@@ -63,11 +70,20 @@ def delete_customer(id):
         """, (id, ))
 
 def update_customer(id, new_customer):
-    for index, customer in enumerate(CUSTOMERS):
-        if customer["id"] == id:
-            CUSTOMERS[index] = new_customer
-            break
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
 
+        db_cursor.execute("""
+        UPDATE customer
+            SET
+                name = ?,
+                email = ?,
+                password = ?
+        WHERE id = ?
+        """, (new_customer['name'], new_customer['email'], new_customer['password'], id, ))
+
+    return json.dumps(new_customer)
+    
 def get_customers_by_email(email):
 
     with sqlite3.connect("./kennel.db") as conn:
